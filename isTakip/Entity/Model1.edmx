@@ -1,0 +1,696 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="dbIsTakipModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="birimler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ad" Type="nvarchar" MaxLength="50" />
+          <Property Name="mudurluk" Type="int" />
+        </EntityType>
+        <EntityType Name="elemanlar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tc" Type="nvarchar" MaxLength="11" />
+          <Property Name="ad" Type="nvarchar" MaxLength="50" />
+          <Property Name="soyad" Type="nvarchar" MaxLength="50" />
+          <Property Name="unvan" Type="int" />
+          <Property Name="sifre" Type="nvarchar" MaxLength="50" />
+          <Property Name="telefon" Type="nvarchar" MaxLength="11" />
+        </EntityType>
+        <EntityType Name="gorevDetay">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="gorev" Type="int" />
+          <Property Name="aciklama" Type="nvarchar" MaxLength="200" />
+          <Property Name="tarih" Type="date" />
+        </EntityType>
+        <EntityType Name="gorevler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="gorevVeren" Type="int" />
+          <Property Name="gorevAlan" Type="int" />
+          <Property Name="mudurluk" Type="int" />
+          <Property Name="birim" Type="int" />
+          <Property Name="baslik" Type="int" />
+          <Property Name="islem" Type="int" />
+          <Property Name="aciklama" Type="nvarchar" MaxLength="200" />
+          <Property Name="tarih" Type="date" />
+          <Property Name="durum" Type="bit" />
+          <Property Name="islemDurumu" Type="int" />
+        </EntityType>
+        <EntityType Name="islemBasliklari">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ad" Type="nvarchar" MaxLength="50" />
+          <Property Name="durum" Type="bit" />
+        </EntityType>
+        <EntityType Name="islemDurmu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ad" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="islemler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ad" Type="nvarchar" MaxLength="50" />
+          <Property Name="islemBasligi" Type="int" />
+        </EntityType>
+        <EntityType Name="mudurlukler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ad" Type="nvarchar" MaxLength="50" />
+          <Property Name="durum" Type="bit" />
+        </EntityType>
+        <EntityType Name="unvan">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ad" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_birimler_mudurlukler">
+          <End Role="mudurlukler" Type="Self.mudurlukler" Multiplicity="0..1" />
+          <End Role="birimler" Type="Self.birimler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mudurlukler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="birimler">
+              <PropertyRef Name="mudurluk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_elemanlar_unvan">
+          <End Role="unvan" Type="Self.unvan" Multiplicity="0..1" />
+          <End Role="elemanlar" Type="Self.elemanlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="unvan">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="elemanlar">
+              <PropertyRef Name="unvan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevDetay_gorevler">
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="0..1" />
+          <End Role="gorevDetay" Type="Self.gorevDetay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="gorevler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevDetay">
+              <PropertyRef Name="gorev" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_birimler">
+          <End Role="birimler" Type="Self.birimler" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="birimler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="birim" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_elemanlar">
+          <End Role="elemanlar" Type="Self.elemanlar" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="elemanlar">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="gorevVeren" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_elemanlar1">
+          <End Role="elemanlar" Type="Self.elemanlar" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="elemanlar">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="gorevAlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_islemBasliklari">
+          <End Role="islemBasliklari" Type="Self.islemBasliklari" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="islemBasliklari">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="baslik" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_islemDurmu">
+          <End Role="islemDurmu" Type="Self.islemDurmu" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="islemDurmu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="islemDurumu" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_islemler">
+          <End Role="islemler" Type="Self.islemler" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="islemler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="islem" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_mudurlukler">
+          <End Role="mudurlukler" Type="Self.mudurlukler" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mudurlukler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="mudurluk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_islemler_islemBasliklari">
+          <End Role="islemBasliklari" Type="Self.islemBasliklari" Multiplicity="0..1" />
+          <End Role="islemler" Type="Self.islemler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="islemBasliklari">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="islemler">
+              <PropertyRef Name="islemBasligi" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbIsTakipModelStoreContainer">
+          <EntitySet Name="birimler" EntityType="Self.birimler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="elemanlar" EntityType="Self.elemanlar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="gorevDetay" EntityType="Self.gorevDetay" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="gorevler" EntityType="Self.gorevler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="islemBasliklari" EntityType="Self.islemBasliklari" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="islemDurmu" EntityType="Self.islemDurmu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="islemler" EntityType="Self.islemler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mudurlukler" EntityType="Self.mudurlukler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="unvan" EntityType="Self.unvan" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_birimler_mudurlukler" Association="Self.FK_birimler_mudurlukler">
+            <End Role="mudurlukler" EntitySet="mudurlukler" />
+            <End Role="birimler" EntitySet="birimler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_elemanlar_unvan" Association="Self.FK_elemanlar_unvan">
+            <End Role="unvan" EntitySet="unvan" />
+            <End Role="elemanlar" EntitySet="elemanlar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevDetay_gorevler" Association="Self.FK_gorevDetay_gorevler">
+            <End Role="gorevler" EntitySet="gorevler" />
+            <End Role="gorevDetay" EntitySet="gorevDetay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_birimler" Association="Self.FK_gorevler_birimler">
+            <End Role="birimler" EntitySet="birimler" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_elemanlar" Association="Self.FK_gorevler_elemanlar">
+            <End Role="elemanlar" EntitySet="elemanlar" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_elemanlar1" Association="Self.FK_gorevler_elemanlar1">
+            <End Role="elemanlar" EntitySet="elemanlar" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_islemBasliklari" Association="Self.FK_gorevler_islemBasliklari">
+            <End Role="islemBasliklari" EntitySet="islemBasliklari" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_islemDurmu" Association="Self.FK_gorevler_islemDurmu">
+            <End Role="islemDurmu" EntitySet="islemDurmu" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_islemler" Association="Self.FK_gorevler_islemler">
+            <End Role="islemler" EntitySet="islemler" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_mudurlukler" Association="Self.FK_gorevler_mudurlukler">
+            <End Role="mudurlukler" EntitySet="mudurlukler" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_islemler_islemBasliklari" Association="Self.FK_islemler_islemBasliklari">
+            <End Role="islemBasliklari" EntitySet="islemBasliklari" />
+            <End Role="islemler" EntitySet="islemler" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dbIsTakipModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="birimler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="mudurluk" Type="Int32" />
+          <NavigationProperty Name="mudurlukler" Relationship="Self.FK_birimler_mudurlukler" FromRole="birimler" ToRole="mudurlukler" />
+          <NavigationProperty Name="gorevler" Relationship="Self.FK_gorevler_birimler" FromRole="birimler" ToRole="gorevler" />
+        </EntityType>
+        <EntityType Name="elemanlar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tc" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="unvan" Type="Int32" />
+          <Property Name="sifre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="telefon" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="unvan1" Relationship="Self.FK_elemanlar_unvan" FromRole="elemanlar" ToRole="unvan" />
+          <NavigationProperty Name="gorevler" Relationship="Self.FK_gorevler_elemanlar" FromRole="elemanlar" ToRole="gorevler" />
+          <NavigationProperty Name="gorevler1" Relationship="Self.FK_gorevler_elemanlar1" FromRole="elemanlar" ToRole="gorevler" />
+        </EntityType>
+        <EntityType Name="gorevDetay">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="gorev" Type="Int32" />
+          <Property Name="aciklama" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="tarih" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="gorevler" Relationship="Self.FK_gorevDetay_gorevler" FromRole="gorevDetay" ToRole="gorevler" />
+        </EntityType>
+        <EntityType Name="gorevler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="gorevVeren" Type="Int32" />
+          <Property Name="gorevAlan" Type="Int32" />
+          <Property Name="mudurluk" Type="Int32" />
+          <Property Name="birim" Type="Int32" />
+          <Property Name="baslik" Type="Int32" />
+          <Property Name="islem" Type="Int32" />
+          <Property Name="aciklama" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="tarih" Type="DateTime" Precision="0" />
+          <Property Name="durum" Type="Boolean" />
+          <Property Name="islemDurumu" Type="Int32" />
+          <NavigationProperty Name="birimler" Relationship="Self.FK_gorevler_birimler" FromRole="gorevler" ToRole="birimler" />
+          <NavigationProperty Name="elemanlar" Relationship="Self.FK_gorevler_elemanlar" FromRole="gorevler" ToRole="elemanlar" />
+          <NavigationProperty Name="elemanlar1" Relationship="Self.FK_gorevler_elemanlar1" FromRole="gorevler" ToRole="elemanlar" />
+          <NavigationProperty Name="gorevDetay" Relationship="Self.FK_gorevDetay_gorevler" FromRole="gorevler" ToRole="gorevDetay" />
+          <NavigationProperty Name="islemBasliklari" Relationship="Self.FK_gorevler_islemBasliklari" FromRole="gorevler" ToRole="islemBasliklari" />
+          <NavigationProperty Name="islemDurmu" Relationship="Self.FK_gorevler_islemDurmu" FromRole="gorevler" ToRole="islemDurmu" />
+          <NavigationProperty Name="islemler" Relationship="Self.FK_gorevler_islemler" FromRole="gorevler" ToRole="islemler" />
+          <NavigationProperty Name="mudurlukler" Relationship="Self.FK_gorevler_mudurlukler" FromRole="gorevler" ToRole="mudurlukler" />
+        </EntityType>
+        <EntityType Name="islemBasliklari">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="durum" Type="Boolean" />
+          <NavigationProperty Name="gorevler" Relationship="Self.FK_gorevler_islemBasliklari" FromRole="islemBasliklari" ToRole="gorevler" />
+          <NavigationProperty Name="islemler" Relationship="Self.FK_islemler_islemBasliklari" FromRole="islemBasliklari" ToRole="islemler" />
+        </EntityType>
+        <EntityType Name="islemDurmu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ad" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="gorevler" Relationship="Self.FK_gorevler_islemDurmu" FromRole="islemDurmu" ToRole="gorevler" />
+        </EntityType>
+        <EntityType Name="islemler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="islemBasligi" Type="Int32" />
+          <NavigationProperty Name="gorevler" Relationship="Self.FK_gorevler_islemler" FromRole="islemler" ToRole="gorevler" />
+          <NavigationProperty Name="islemBasliklari" Relationship="Self.FK_islemler_islemBasliklari" FromRole="islemler" ToRole="islemBasliklari" />
+        </EntityType>
+        <EntityType Name="mudurlukler">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="durum" Type="Boolean" />
+          <NavigationProperty Name="birimler" Relationship="Self.FK_birimler_mudurlukler" FromRole="mudurlukler" ToRole="birimler" />
+          <NavigationProperty Name="gorevler" Relationship="Self.FK_gorevler_mudurlukler" FromRole="mudurlukler" ToRole="gorevler" />
+        </EntityType>
+        <EntityType Name="unvan">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="elemanlar" Relationship="Self.FK_elemanlar_unvan" FromRole="unvan" ToRole="elemanlar" />
+        </EntityType>
+        <Association Name="FK_birimler_mudurlukler">
+          <End Role="mudurlukler" Type="Self.mudurlukler" Multiplicity="0..1" />
+          <End Role="birimler" Type="Self.birimler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mudurlukler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="birimler">
+              <PropertyRef Name="mudurluk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_birimler">
+          <End Role="birimler" Type="Self.birimler" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="birimler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="birim" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_elemanlar_unvan">
+          <End Role="unvan" Type="Self.unvan" Multiplicity="0..1" />
+          <End Role="elemanlar" Type="Self.elemanlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="unvan">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="elemanlar">
+              <PropertyRef Name="unvan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_elemanlar">
+          <End Role="elemanlar" Type="Self.elemanlar" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="elemanlar">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="gorevVeren" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_elemanlar1">
+          <End Role="elemanlar" Type="Self.elemanlar" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="elemanlar">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="gorevAlan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevDetay_gorevler">
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="0..1" />
+          <End Role="gorevDetay" Type="Self.gorevDetay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="gorevler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevDetay">
+              <PropertyRef Name="gorev" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_islemBasliklari">
+          <End Role="islemBasliklari" Type="Self.islemBasliklari" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="islemBasliklari">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="baslik" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_islemDurmu">
+          <End Role="islemDurmu" Type="Self.islemDurmu" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="islemDurmu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="islemDurumu" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_islemler">
+          <End Role="islemler" Type="Self.islemler" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="islemler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="islem" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gorevler_mudurlukler">
+          <End Role="mudurlukler" Type="Self.mudurlukler" Multiplicity="0..1" />
+          <End Role="gorevler" Type="Self.gorevler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mudurlukler">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="gorevler">
+              <PropertyRef Name="mudurluk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_islemler_islemBasliklari">
+          <End Role="islemBasliklari" Type="Self.islemBasliklari" Multiplicity="0..1" />
+          <End Role="islemler" Type="Self.islemler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="islemBasliklari">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="islemler">
+              <PropertyRef Name="islemBasligi" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbIsTakipEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="birimler" EntityType="Self.birimler" />
+          <EntitySet Name="elemanlar" EntityType="Self.elemanlar" />
+          <EntitySet Name="gorevDetay" EntityType="Self.gorevDetay" />
+          <EntitySet Name="gorevler" EntityType="Self.gorevler" />
+          <EntitySet Name="islemBasliklari" EntityType="Self.islemBasliklari" />
+          <EntitySet Name="islemDurmu" EntityType="Self.islemDurmu" />
+          <EntitySet Name="islemler" EntityType="Self.islemler" />
+          <EntitySet Name="mudurlukler" EntityType="Self.mudurlukler" />
+          <EntitySet Name="unvan" EntityType="Self.unvan" />
+          <AssociationSet Name="FK_birimler_mudurlukler" Association="Self.FK_birimler_mudurlukler">
+            <End Role="mudurlukler" EntitySet="mudurlukler" />
+            <End Role="birimler" EntitySet="birimler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_birimler" Association="Self.FK_gorevler_birimler">
+            <End Role="birimler" EntitySet="birimler" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_elemanlar_unvan" Association="Self.FK_elemanlar_unvan">
+            <End Role="unvan" EntitySet="unvan" />
+            <End Role="elemanlar" EntitySet="elemanlar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_elemanlar" Association="Self.FK_gorevler_elemanlar">
+            <End Role="elemanlar" EntitySet="elemanlar" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_elemanlar1" Association="Self.FK_gorevler_elemanlar1">
+            <End Role="elemanlar" EntitySet="elemanlar" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevDetay_gorevler" Association="Self.FK_gorevDetay_gorevler">
+            <End Role="gorevler" EntitySet="gorevler" />
+            <End Role="gorevDetay" EntitySet="gorevDetay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_islemBasliklari" Association="Self.FK_gorevler_islemBasliklari">
+            <End Role="islemBasliklari" EntitySet="islemBasliklari" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_islemDurmu" Association="Self.FK_gorevler_islemDurmu">
+            <End Role="islemDurmu" EntitySet="islemDurmu" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_islemler" Association="Self.FK_gorevler_islemler">
+            <End Role="islemler" EntitySet="islemler" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gorevler_mudurlukler" Association="Self.FK_gorevler_mudurlukler">
+            <End Role="mudurlukler" EntitySet="mudurlukler" />
+            <End Role="gorevler" EntitySet="gorevler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_islemler_islemBasliklari" Association="Self.FK_islemler_islemBasliklari">
+            <End Role="islemBasliklari" EntitySet="islemBasliklari" />
+            <End Role="islemler" EntitySet="islemler" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dbIsTakipModelStoreContainer" CdmEntityContainer="dbIsTakipEntities">
+          <EntitySetMapping Name="birimler">
+            <EntityTypeMapping TypeName="dbIsTakipModel.birimler">
+              <MappingFragment StoreEntitySet="birimler">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+                <ScalarProperty Name="mudurluk" ColumnName="mudurluk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="elemanlar">
+            <EntityTypeMapping TypeName="dbIsTakipModel.elemanlar">
+              <MappingFragment StoreEntitySet="elemanlar">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="tc" ColumnName="tc" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+                <ScalarProperty Name="soyad" ColumnName="soyad" />
+                <ScalarProperty Name="unvan" ColumnName="unvan" />
+                <ScalarProperty Name="sifre" ColumnName="sifre" />
+                <ScalarProperty Name="telefon" ColumnName="telefon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="gorevDetay">
+            <EntityTypeMapping TypeName="dbIsTakipModel.gorevDetay">
+              <MappingFragment StoreEntitySet="gorevDetay">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="gorev" ColumnName="gorev" />
+                <ScalarProperty Name="aciklama" ColumnName="aciklama" />
+                <ScalarProperty Name="tarih" ColumnName="tarih" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="gorevler">
+            <EntityTypeMapping TypeName="dbIsTakipModel.gorevler">
+              <MappingFragment StoreEntitySet="gorevler">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="gorevVeren" ColumnName="gorevVeren" />
+                <ScalarProperty Name="gorevAlan" ColumnName="gorevAlan" />
+                <ScalarProperty Name="mudurluk" ColumnName="mudurluk" />
+                <ScalarProperty Name="birim" ColumnName="birim" />
+                <ScalarProperty Name="baslik" ColumnName="baslik" />
+                <ScalarProperty Name="islem" ColumnName="islem" />
+                <ScalarProperty Name="aciklama" ColumnName="aciklama" />
+                <ScalarProperty Name="tarih" ColumnName="tarih" />
+                <ScalarProperty Name="durum" ColumnName="durum" />
+                <ScalarProperty Name="islemDurumu" ColumnName="islemDurumu" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="islemBasliklari">
+            <EntityTypeMapping TypeName="dbIsTakipModel.islemBasliklari">
+              <MappingFragment StoreEntitySet="islemBasliklari">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+                <ScalarProperty Name="durum" ColumnName="durum" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="islemDurmu">
+            <EntityTypeMapping TypeName="dbIsTakipModel.islemDurmu">
+              <MappingFragment StoreEntitySet="islemDurmu">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="islemler">
+            <EntityTypeMapping TypeName="dbIsTakipModel.islemler">
+              <MappingFragment StoreEntitySet="islemler">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+                <ScalarProperty Name="islemBasligi" ColumnName="islemBasligi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mudurlukler">
+            <EntityTypeMapping TypeName="dbIsTakipModel.mudurlukler">
+              <MappingFragment StoreEntitySet="mudurlukler">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+                <ScalarProperty Name="durum" ColumnName="durum" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="unvan">
+            <EntityTypeMapping TypeName="dbIsTakipModel.unvan">
+              <MappingFragment StoreEntitySet="unvan">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ad" ColumnName="ad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
